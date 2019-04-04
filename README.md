@@ -5,22 +5,15 @@ datasources and dashboards, where:
 
 * the datasources are Prometheus servers registered in Consul
 * you want Grafana to run as a Nomad job
-* you have Consul KV and DNS available in your environment
+* you have Consul DNS available in your environment
+* you want to store your dashboards in a Git repo
 
 Neither the datasources nor dashboards will be modifiable via the Grafana UI.
 This is a feature.
 
 ## Usage
 
-Put your dashboards into dashboards.tgz, e.g.
-
-```bash
-vagrant@ubuntu-xenial:~/grafana-hashiprov$ tar ztf dashboards.tgz 
-consul-server.json
-nomad-server.json
-nomad-client.json
-nomad-job.json
-```
+Put your dashboards into a repo, e.g. https://github.com/ncabatoff/grafana-dashboards.
 
 ```bash
 terraform init

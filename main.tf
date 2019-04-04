@@ -20,12 +20,10 @@ provider "nomad" {}
 #   possibly adjusting https/http and dc1.
 provider "consul" {}
 
-variable "dashboards_tgz" {
-  default = "./dashboards.tgz"
-}
 variable "consul_datacenter" {
   default = "dc1"
 }
+
 variable "grafana_docker_image" {
   default = "grafana/grafana:5.1.0"
 }
@@ -35,19 +33,21 @@ variable "grafana_network_mode" {
   # to be able to do Consul DNS resolution.
   default = "host"
 }
-variable "consul_dashboard_key" {
-  default = "grafana/dashboards.tgz"
-}
 
-data "local_file" "dashboards" {
-  filename = "${var.dashboards_tgz}"
+variable "git_sync_docker_image" {
+  default = "k8s.gcr.io/git-sync:v3.1.1"
 }
-
-resource "consul_keys" "grafana_dashboards" {
-  key {
-    path = "${var.consul_dashboard_key}"
-    value = "${data.local_file.dashboards.content}"
-  }
+variable "git_repo" {
+  default = "https://github.com/ncabatoff/grafana-dashboards"
+}
+variable "git_repo_subfolder" {
+  default = "dashboards"
+}
+variable "git_branch" {
+  default = "master"
+}
+variable "git_sync_dest" {
+  default = "dashboards"
 }
 
 resource "nomad_job" "grafana" {
@@ -57,10 +57,13 @@ resource "nomad_job" "grafana" {
 data "template_file" "grafana_hcl" {
   template = "${file("grafana.hcl")}"
   vars = {
-    dashboard_checksum = "${md5(data.local_file.dashboards.content)}"
     consul_datacenter = "${var.consul_datacenter}"
-    consul_dashboard_key = "${var.consul_dashboard_key}"
     grafana_docker_image = "${var.grafana_docker_image}"
     grafana_network_mode = "${var.grafana_network_mode}"
+    git_sync_docker_image = "${var.git_sync_docker_image}"
+    git_repo = "${var.git_repo}"
+    git_repo_subfolder = "${var.git_repo_subfolder}"
+    git_branch = "${var.git_branch}"
+    git_sync_dest = "${var.git_sync_dest}"
   }
 }

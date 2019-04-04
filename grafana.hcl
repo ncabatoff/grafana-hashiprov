@@ -38,15 +38,8 @@ job "grafana" {
             updateIntervalSeconds: 60
             editable: true
             options:
-              path: /local/dashboards
+              path: /alloc/data/${git_sync_dest}/${git_repo_subfolder}
       EOH
-      }
-      artifact {
-        source = "http://consul.service.${consul_datacenter}.consul:8500/v1/kv/${consul_dashboard_key}?raw=true"
-        destination = "local/dashboards/"
-        options {
-          checksum = "md5:${dashboard_checksum}"
-        }
       }
       driver = "docker"
       config {
@@ -80,6 +73,21 @@ job "grafana" {
           interval = "30s"
           timeout = "2s"
         }
+      }
+    }
+    task "git-sync" {
+      driver = "docker"
+      config {
+        image = "${git_sync_docker_image}"
+        args = [
+          "-repo", "${git_repo}",
+          "-branch", "${git_branch}",
+          "-root", "/alloc/data",
+          "-dest", "${git_sync_dest}",
+        ]
+      }
+      resources {
+        memory = 25
       }
     }
   }
