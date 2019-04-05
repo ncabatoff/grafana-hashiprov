@@ -12,7 +12,7 @@ job "grafana" {
           apiVersion: 1
 
           datasources:
-{{ range $index, $element := service "prometheus|any" }}
+{{ range $index, $element := service "prometheus~_agent|any" }}
           - name: prom-{{ $element.Address }}
             type: prometheus
             access: proxy
