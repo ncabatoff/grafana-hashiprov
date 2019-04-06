@@ -25,7 +25,7 @@ variable "consul_datacenter" {
 }
 
 variable "grafana_docker_image" {
-  default = "grafana/grafana:5.1.0"
+  default = "grafana/grafana:6.0.2"
 }
 variable "grafana_network_mode" {
   # Why use host network mode?  We could avoid it if we used a direct
