@@ -39,9 +39,3 @@ Workaround if you ever get into a bad state:
 * ```terraform destroy -target=nomad_job.grafana```
 * ```terraform apply```
 
-### 2. Static Prometheus instances
-
-We don't notice if your set of Prometheus instances registered in Consul changes.
-
-Workaround: you could probably set something up to monitor that service set using
-consul-template and have it trigger a redeployment via destroy/apply.
