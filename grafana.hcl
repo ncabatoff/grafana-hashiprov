@@ -12,13 +12,13 @@ job "grafana" {
           apiVersion: 1
 
           datasources:
-{{ range $index, $element := service "prometheus|any" }}
-          - name: prom-{{ $element.Address }}
+{{ range service "prometheus|any" }}
+          - name: prom-{{ .Address }}
             type: prometheus
             access: proxy
             orgId: 1
-            url: http://{{ $element.Address }}:{{ $element.Port }}
-            isDefault: {{ eq $index 0 }}
+            url: http://{{ .Address }}:{{ .Port }}
+            isDefault: {{ if .Tags | contains "primary" }}true{{ else }}false{{ end }}
             version: 1
             editable: false
 {{ end }}
