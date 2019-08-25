@@ -25,7 +25,7 @@ variable "consul_datacenter" {
 }
 
 variable "grafana_docker_image" {
-  default = "grafana/grafana:6.0.2"
+  default = "grafana/grafana-arm64v8-linux:6.3.3"
 }
 variable "grafana_network_mode" {
   # Why use host network mode?  We could avoid it if we used a direct
@@ -35,7 +35,7 @@ variable "grafana_network_mode" {
 }
 
 variable "git_sync_docker_image" {
-  default = "k8s.gcr.io/git-sync:v3.1.1"
+  default = "ncabatoff/git-sync:v3.1.2__linux_arm64"
 }
 variable "git_repo" {
   default = "https://github.com/ncabatoff/grafana-dashboards"

@@ -5,6 +5,15 @@ job "grafana" {
   datacenters = ["${consul_datacenter}"]
   type = "service"
   group "grafana" {
+//    reschedule {
+//      unlimited = true
+//      delay = "15s"
+//      delay_function = "constant"
+//    }
+    constraint {
+      attribute = "$${attr.cpu.arch}"
+      value = "arm64"
+    }
     task "grafana" {
       template {
         destination = "local/provisioning/datasources/prometheus.yml"
@@ -87,7 +96,7 @@ job "grafana" {
         ]
       }
       resources {
-        memory = 25
+        memory = 50
       }
     }
   }
