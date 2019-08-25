@@ -1,6 +1,6 @@
 terraform {
   backend "consul" {
-    path = "terraform"
+    path = "terraform/grafana-hashiprov"
   }
 }
 # * If you run a local nomad agent and don't use TLS: do nothing.
