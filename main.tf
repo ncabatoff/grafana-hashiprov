@@ -16,7 +16,7 @@ provider "nomad" {}
 #   CONSUL_HTTP_ADDR=https://localhost:8500
 # * If you don't run a local nomad agent but have DNS hooked up to Consul, set
 #   env var
-#   CONSUL_HTTP_ADDR=https://consul.service.dc1.consul:4646
+#   CONSUL_HTTP_ADDR=https://consul.service.dc1.consul:8500
 #   possibly adjusting https/http and dc1.
 provider "consul" {}
 
@@ -51,12 +51,7 @@ variable "git_sync_dest" {
 }
 
 resource "nomad_job" "grafana" {
-  jobspec = "${data.template_file.grafana_hcl.rendered}"
-}
-
-data "template_file" "grafana_hcl" {
-  template = "${file("grafana.hcl")}"
-  vars = {
+  jobspec = templatefile("grafana.hcl", {
     consul_datacenter = "${var.consul_datacenter}"
     grafana_docker_image = "${var.grafana_docker_image}"
     grafana_network_mode = "${var.grafana_network_mode}"
@@ -65,5 +60,5 @@ data "template_file" "grafana_hcl" {
     git_repo_subfolder = "${var.git_repo_subfolder}"
     git_branch = "${var.git_branch}"
     git_sync_dest = "${var.git_sync_dest}"
-  }
+  })
 }
